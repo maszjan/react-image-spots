@@ -1,0 +1,68 @@
+{
+  "name": "react-image-spots",
+  "version": "0.1.0",
+  "description": "Interactive image maps with edit mode for visual hotspot creation",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "typecheck": "tsc --noEmit",
+    "demo": "cd demo && npm run dev",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "framer-motion": ">=6.0.0",
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "framer-motion": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.0.1",
+    "framer-motion": "^10.0.0",
+    "jsdom": "^29.0.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "rollup": "^3.30.0",
+    "rollup-plugin-dts": "^5.3.1",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.4"
+  },
+  "keywords": [
+    "react",
+    "image",
+    "hotspot",
+    "interactive",
+    "map",
+    "edit"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/example/react-image-spots"
+  }
+}
