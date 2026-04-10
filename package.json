@@ -63,6 +63,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/example/react-image-spots"
+    "url": "git+https://github.com/maszjan/react-image-spots.git"
   }
 }
