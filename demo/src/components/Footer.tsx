@@ -42,7 +42,7 @@ export const Footer = () => (
 
 			{/* Version */}
 			<div className='text-xs text-slate-300 dark:text-white/15 font-mono'>
-				v0.1.0
+				v{__APP_VERSION__}
 			</div>
 		</div>
 	</footer>

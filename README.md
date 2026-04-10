@@ -3,8 +3,12 @@
 Interactive image hotspots for React. Define spots in code, render anything, navigate between scenes with animations.
 
 [![npm](https://img.shields.io/npm/v/react-image-spots)](https://npmjs.com/package/react-image-spots)
-[![tests](https://github.com/your-username/react-image-spots/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/react-image-spots/actions/workflows/ci.yml)
+[![tests](https://github.com/maszjan/react-image-spots/actions/workflows/ci.yml/badge.svg)](https://github.com/maszjan/react-image-spots/actions/workflows/ci.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+![preview](preview.gif)
+
+**[Live demo →](https://maszjan.github.io/react-image-spots/)**
 
 ---
 

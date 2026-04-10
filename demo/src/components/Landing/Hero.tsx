@@ -13,7 +13,7 @@ export const Hero = () => {
 			{/* Badge */}
 			<div className='relative mb-6 flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 text-sm text-slate-500 dark:text-white/50 shadow-sm'>
 				<div className='w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse' />
-				v0.1.0 — Now available on npm
+				v{__APP_VERSION__} — Now available on npm
 			</div>
 
 			{/* Title */}

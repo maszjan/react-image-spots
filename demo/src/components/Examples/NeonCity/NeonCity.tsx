@@ -2,6 +2,7 @@ import { SceneChain } from "react-image-spots";
 import type { SceneDef } from "react-image-spots";
 import { NeonSpot } from "./NeonSpot";
 import { NeonBackButton } from "./NeonBackButton";
+import { asset } from "../../../utils";
 
 const COLORS = {
 	bridge: "#00fff0",
@@ -11,7 +12,7 @@ const COLORS = {
 
 const scenes: Record<string, SceneDef> = {
 	map: {
-		src: "/examples/neon_city/map.jpg",
+		src: asset("examples/neon_city/map.jpg"),
 		spots: [
 			{
 				id: "bridge",
@@ -24,7 +25,7 @@ const scenes: Record<string, SceneDef> = {
 						label='The Bridge'
 						sublabel='SECTOR 7 — TRANSIT HUB'
 						color={COLORS.bridge}
-						previewSrc='/examples/neon_city/bridge.jpg'
+						previewSrc={asset("examples/neon_city/bridge.jpg")}
 						nextScene='bridge'
 					/>
 				),
@@ -40,7 +41,7 @@ const scenes: Record<string, SceneDef> = {
 						label='Corp Downtown'
 						sublabel='MEGACORP DISTRICT'
 						color={COLORS.corporate}
-						previewSrc='/examples/neon_city/corporate_downtown.jpg'
+						previewSrc={asset("examples/neon_city/corporate_downtown.jpg")}
 						nextScene='corporate'
 					/>
 				),
@@ -56,16 +57,19 @@ const scenes: Record<string, SceneDef> = {
 						label='The Slums'
 						sublabel='LOWER DISTRICT — HIGH RISK'
 						color={COLORS.slums}
-						previewSrc='/examples/neon_city/slums.jpg'
+						previewSrc={asset("examples/neon_city/slums.jpg")}
 						nextScene='slums'
 					/>
 				),
 			},
 		],
 	},
-	bridge: { src: "/examples/neon_city/bridge.jpg", spots: [] },
-	corporate: { src: "/examples/neon_city/corporate_downtown.jpg", spots: [] },
-	slums: { src: "/examples/neon_city/slums.jpg", spots: [] },
+	bridge: { src: asset("examples/neon_city/bridge.jpg"), spots: [] },
+	corporate: {
+		src: asset("examples/neon_city/corporate_downtown.jpg"),
+		spots: [],
+	},
+	slums: { src: asset("examples/neon_city/slums.jpg"), spots: [] },
 };
 
 export const NeonCity = () => (

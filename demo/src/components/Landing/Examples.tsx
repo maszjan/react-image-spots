@@ -3,6 +3,7 @@ import { ImageSpotMap } from "react-image-spots";
 import type { SpotDef } from "react-image-spots";
 import { CodeBlock } from "../CodeBlock";
 import { NeonCity } from "../Examples/NeonCity/NeonCity";
+import { asset } from "../../utils";
 
 const editorCode = `<ImageSpotMap
   mode="edit"
@@ -25,7 +26,7 @@ const mapOnlySpots: SpotDef[] = [
 		id: "bridge",
 		position: { x: 28, y: 52 },
 		size: { w: 7, h: 7 },
-		hoverSrc: "/examples/neon_city/bridge.jpg",
+		hoverSrc: asset("examples/neon_city/bridge.jpg"),
 		swapAnimation: "glitch",
 		render: ({ onMouseEnter, onMouseLeave, isHovered }) => (
 			<div
@@ -70,7 +71,7 @@ const mapOnlySpots: SpotDef[] = [
 		id: "corporate",
 		position: { x: 62, y: 35 },
 		size: { w: 7, h: 7 },
-		hoverSrc: "/examples/neon_city/corporate_downtown.jpg",
+		hoverSrc: asset("examples/neon_city/corporate_downtown.jpg"),
 		swapAnimation: "glitch",
 		render: ({ onMouseEnter, onMouseLeave, isHovered }) => (
 			<div
@@ -115,7 +116,7 @@ const mapOnlySpots: SpotDef[] = [
 		id: "slums",
 		position: { x: 48, y: 70 },
 		size: { w: 7, h: 7 },
-		hoverSrc: "/examples/neon_city/slums.jpg",
+		hoverSrc: asset("examples/neon_city/slums.jpg"),
 		swapAnimation: "glitch",
 		render: ({ onMouseEnter, onMouseLeave, isHovered }) => (
 			<div
@@ -244,7 +245,7 @@ const examples = [
 			<div className='aspect-video w-full'>
 				<ImageSpotMap
 					mode='edit'
-					src='/examples/neon_city/map.jpg'
+					src={asset("examples/neon_city/map.jpg")}
 					alt='Neon City — Edit Mode'
 				/>
 			</div>
@@ -260,7 +261,7 @@ const examples = [
 		demo: (
 			<div className='aspect-video w-full'>
 				<ImageSpotMap
-					src='/examples/neon_city/map.jpg'
+					src={asset("examples/neon_city/map.jpg")}
 					alt='Neon City Map'
 					spots={mapOnlySpots}
 					hideHoveredSpot={true}
