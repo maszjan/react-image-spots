@@ -2,7 +2,13 @@ import resolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
 
-const external = ["react", "react-dom", "react/jsx-runtime", "framer-motion"];
+const external = [
+  "react",
+  "react-dom",
+  "react/jsx-runtime",
+  "framer-motion",
+  "lucide-react",
+];
 
 export default [
   {
@@ -13,11 +19,13 @@ export default [
         file: "dist/index.esm.js",
         format: "esm",
         sourcemap: true,
+        banner: '"use client";',
       },
       {
         file: "dist/index.cjs.js",
         format: "cjs",
         sourcemap: true,
+        banner: '"use client";',
       },
     ],
     plugins: [

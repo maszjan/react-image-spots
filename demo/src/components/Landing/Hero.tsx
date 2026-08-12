@@ -1,5 +1,6 @@
 import TerminalAnimation from "./TerminalAnimation";
 import { Examples } from "./Examples";
+import { FeaturedLayerScene } from "./FeaturedLayerScene";
 
 export const Hero = () => {
 	return (
@@ -13,7 +14,7 @@ export const Hero = () => {
 			{/* Badge */}
 			<div className='relative mb-6 flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 text-sm text-slate-500 dark:text-white/50 shadow-sm'>
 				<div className='w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse' />
-				v{__APP_VERSION__} — Now available on npm
+				v{__APP_VERSION__} - Now available on npm
 			</div>
 
 			{/* Title */}
@@ -37,11 +38,12 @@ export const Hero = () => {
 				in code, render anything, navigate between scenes with animations
 			</p>
 
-			<div className='w-full max-w-3xl min-w-0 mb-12'>
+			<div className='w-full max-w-4xl min-w-0 mb-12'>
 				<TerminalAnimation />
 			</div>
 
 			<div className='relative w-full'>
+				<FeaturedLayerScene />
 				<Examples />
 			</div>
 		</section>

@@ -80,7 +80,7 @@ export const SceneChain: React.FC<SceneChainProps> = ({
 				position: "relative",
 				width: "100%",
 				height: "100%",
-				// overflow: hidden removed — spots can overflow
+				// overflow: hidden removed - spots can overflow
 				...style,
 			}}>
 			{/* overflow: hidden only on image wrapper for transition */}

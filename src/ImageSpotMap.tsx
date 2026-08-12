@@ -73,7 +73,7 @@ export const ImageSpotMap: React.FC<ImageSpotMapProps> = ({
 			setMarkers((p) => [...p, pos]);
 			navigator.clipboard
 				.writeText(`{ x: ${pos.x}, y: ${pos.y} }`)
-				.then(() => showToast(`#${index} copied — x: ${pos.x}, y: ${pos.y}`))
+				.then(() => showToast(`#${index} copied - x: ${pos.x}, y: ${pos.y}`))
 				.catch(() => showToast(`#${index} x: ${pos.x}, y: ${pos.y}`));
 			onSpotPlace?.(pos, index);
 		},

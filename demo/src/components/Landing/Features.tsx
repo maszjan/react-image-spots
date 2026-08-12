@@ -2,19 +2,19 @@ const features = [
 	{
 		icon: "⌖",
 		title: "Code-first API",
-		desc: "Define spots in React — no JSON, no config files. Full TypeScript with autocomplete.",
+		desc: "Define spots in React - no JSON, no config files. Full TypeScript with autocomplete.",
 		color: "text-blue-500",
 	},
 	{
 		icon: "◈",
 		title: "Render anything",
-		desc: "Pass any React component as a spot. Tailwind, CSS modules, inline styles — your call.",
+		desc: "Pass any React component as a spot. Tailwind, CSS modules, inline styles - your call.",
 		color: "text-violet-500",
 	},
 	{
 		icon: "⟳",
 		title: "Responsive by default",
-		desc: "Positions in % — spots scale perfectly with any image or container size.",
+		desc: "Positions in % - spots scale perfectly with any image or container size.",
 		color: "text-emerald-500",
 	},
 	{
@@ -32,7 +32,7 @@ const features = [
 	{
 		icon: "◎",
 		title: "Built-in editor",
-		desc: 'Switch to mode="edit" — click image to get positions, auto-copied to clipboard.',
+		desc: 'Switch to mode="edit" - click image to get positions, auto-copied to clipboard.',
 		color: "text-cyan-500",
 	},
 ];

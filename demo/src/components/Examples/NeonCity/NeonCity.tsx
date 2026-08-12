@@ -23,7 +23,7 @@ const scenes: Record<string, SceneDef> = {
 					<NeonSpot
 						{...p}
 						label='The Bridge'
-						sublabel='SECTOR 7 — TRANSIT HUB'
+						sublabel='SECTOR 7 - TRANSIT HUB'
 						color={COLORS.bridge}
 						previewSrc={asset("examples/neon_city/bridge.jpg")}
 						nextScene='bridge'
@@ -55,7 +55,7 @@ const scenes: Record<string, SceneDef> = {
 					<NeonSpot
 						{...p}
 						label='The Slums'
-						sublabel='LOWER DISTRICT — HIGH RISK'
+						sublabel='LOWER DISTRICT - HIGH RISK'
 						color={COLORS.slums}
 						previewSrc={asset("examples/neon_city/slums.jpg")}
 						nextScene='slums'

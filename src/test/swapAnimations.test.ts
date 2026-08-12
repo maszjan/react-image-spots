@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { resolveAnimation } from "../components/swapAnimations";
 
-describe("resolveAnimation — presets", () => {
+describe("resolveAnimation - presets", () => {
 	it("fade: has animation and correct duration", () => {
 		const r = resolveAnimation("fade", 400);
 		expect(r.enterAnimation).toBeTruthy();
@@ -95,7 +95,7 @@ describe("resolveAnimation — presets", () => {
 	});
 });
 
-describe("resolveAnimation — custom object", () => {
+describe("resolveAnimation - custom object", () => {
 	it("passes through enter and leave", () => {
 		const r = resolveAnimation(
 			{

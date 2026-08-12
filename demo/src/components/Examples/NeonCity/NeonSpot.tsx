@@ -153,7 +153,7 @@ export const NeonSpot = ({
 				{label}
 			</div>
 
-			{/* Preview card — smart positioned */}
+			{/* Preview card - smart positioned */}
 			{isHovered && (
 				<div style={cardStyle}>
 					<div

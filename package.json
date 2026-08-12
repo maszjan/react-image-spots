@@ -1,7 +1,7 @@
 {
   "name": "react-image-spots",
-  "version": "0.1.4",
-  "description": "Interactive image maps with edit mode for visual hotspot creation",
+  "version": "0.2.0",
+  "description": "Interactive image maps and multi-layer scene compositing for React, with a visual edit mode",
   "homepage": "https://maszjan.github.io/react-image-spots/",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -27,11 +27,15 @@
   },
   "peerDependencies": {
     "framer-motion": ">=6.0.0",
+    "lucide-react": ">=0.300.0",
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0"
   },
   "peerDependenciesMeta": {
     "framer-motion": {
+      "optional": true
+    },
+    "lucide-react": {
       "optional": true
     }
   },
@@ -45,6 +49,7 @@
     "@vitejs/plugin-react": "^6.0.1",
     "framer-motion": "^10.0.0",
     "jsdom": "^29.0.2",
+    "lucide-react": "^0.475.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "rollup": "^3.30.0",
@@ -59,7 +64,10 @@
     "hotspot",
     "interactive",
     "map",
-    "edit"
+    "edit",
+    "layers",
+    "compositing",
+    "icons"
   ],
   "license": "MIT",
   "repository": {

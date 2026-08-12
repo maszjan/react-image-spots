@@ -20,7 +20,6 @@ function getRoute(): Route {
 export function navigate(route: Route, sectionId?: string) {
 	window.location.hash = route;
 	if (sectionId) {
-		// Czekamy na render nowej strony potem scrollujemy
 		setTimeout(() => {
 			document
 				.getElementById(sectionId)

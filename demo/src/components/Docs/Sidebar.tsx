@@ -12,6 +12,7 @@ export const DOC_SECTIONS = [
 	{ id: "swap", label: "Image Swap" },
 	{ id: "animations", label: "Animations" },
 	{ id: "chain", label: "Scene Chain" },
+	{ id: "layer-scene", label: "Layer Scene" },
 	{ id: "api", label: "API Reference" },
 ];
 
@@ -48,6 +49,11 @@ export const Sidebar = ({ activeSection, onSectionClick }: SidebarProps) => (
 							route: "home" as const,
 							label: "Scene Chain",
 							sectionId: "chain",
+						},
+						{
+							route: "docs" as const,
+							label: "Layer Scene",
+							sectionId: "layer-scene",
 						},
 					].map(({ route, label, sectionId }) => (
 						<button

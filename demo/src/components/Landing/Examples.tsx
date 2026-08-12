@@ -239,14 +239,14 @@ const examples = [
 		id: "editor",
 		label: "01",
 		title: "Edit Mode",
-		desc: 'Switch to mode="edit" on your actual image. Click to place markers — positions auto-copied to clipboard.',
+		desc: 'Switch to mode="edit" on your actual image. Click to place markers - positions auto-copied to clipboard.',
 		accentColor: "text-amber-500 dark:text-amber-400",
 		demo: (
 			<div className='aspect-video w-full'>
 				<ImageSpotMap
 					mode='edit'
 					src={asset("examples/neon_city/map.jpg")}
-					alt='Neon City — Edit Mode'
+					alt='Neon City - Edit Mode'
 				/>
 			</div>
 		),
@@ -256,7 +256,7 @@ const examples = [
 		id: "map",
 		label: "02",
 		title: "Image Spot Map",
-		desc: "Hover a spot — others fade out, main image glitch-swaps. Custom neon components, per-spot animation presets.",
+		desc: "Hover a spot - others fade out, main image glitch-swaps. Custom neon components, per-spot animation presets.",
 		accentColor: "text-cyan-500 dark:text-cyan-400",
 		demo: (
 			<div className='aspect-video w-full'>
@@ -274,7 +274,7 @@ const examples = [
 		id: "chain",
 		label: "03",
 		title: "Scene Chain",
-		desc: "Navigate between scenes with fade transition. Custom back button, no breadcrumb — full control over UI.",
+		desc: "Navigate between scenes with fade transition. Custom back button, no breadcrumb - full control over UI.",
 		accentColor: "text-pink-500 dark:text-pink-400",
 		demo: <NeonCity />,
 		code: chainCode,
@@ -318,11 +318,13 @@ export const Examples = () => {
 									{desc}
 								</p>
 							</div>
-							<button
-								onClick={() => toggle(id)}
-								className='shrink-0 ml-6 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-200 dark:border-white/10 text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-white/20 transition-all cursor-pointer'>
-								{activeTab[id] === "demo" ? "View code" : "View demo"}
-							</button>
+						<div className='shrink-0 ml-6'>
+								<button
+									onClick={() => toggle(id)}
+									className='px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-200 dark:border-white/10 text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-white/20 transition-all cursor-pointer'>
+									{activeTab[id] === "demo" ? "View code" : "View demo"}
+								</button>
+							</div>
 						</div>
 						<div
 							className={`rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm ${activeTab[id] === "demo" ? "overflow-visible" : "overflow-hidden"}`}>
