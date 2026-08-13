@@ -11,6 +11,7 @@ import React, {
 import { resolveLayerAnimation } from "./components/layerAnimations";
 import { LayerPanel } from "./components/LayerPanel";
 import { LayerToolbar } from "./components/LayerToolbar";
+import type { AnchorRect } from "./components/useDraggable";
 import { searchIcons, splitIconWords, useLucideIcon } from "./iconRegistry";
 import {
 	getEffectiveLayerValues,
@@ -32,13 +33,12 @@ import {
 const FONT = "system-ui,sans-serif";
 const ACCENT = "#3b82f6";
 
-// The toolbar and readout are absolutely-positioned, reserved-height bands
-// (not normal-flow siblings) so their own content width/visibility can
-// never push, shrink, or reflow the scene box next to/below them - its
-// bounding rect must stay identical whether or not a layer is selected.
-const TOOLBAR_HEIGHT = 44;
+// The toolbar/panel are portalled, `position: fixed` overlays (see
+// `wrapperRect`) that never share layout space with the scene box - so their
+// own presence/size can never push, shrink, or reflow it, or anything on the
+// page around it. The readout is a normal absolutely-positioned overlay
+// within the scene's own (edit-mode-independent-sized) wrapper.
 const READOUT_HEIGHT = 34;
-const ROW_GAP = 12;
 
 // Simulated device widths (px) for the toolbar's Mobile/Tablet buttons - the
 // scene box itself visually narrows to this width (centered) so switching
@@ -325,16 +325,22 @@ export const LayerScene = forwardRef<LayerSceneHandle, LayerSceneProps>(
 		const contextEditMode = useSpotsEditContext();
 		const resolvedMode = mode ?? (contextEditMode ? "edit" : "preview");
 		const isEdit = resolvedMode === "edit";
+		const showEditorChrome = isEdit && showChrome;
 
 		const [layers, setLayers] = useState<LayerDef[]>(initialLayers);
 		const [selectedId, setSelectedId] = useState<string | null>(null);
 		const [readout, setReadout] = useState<Readout | null>(null);
 		const [iconBrowserOpen, setIconBrowserOpen] = useState(false);
 		const [panelOpen, setPanelOpen] = useState(true);
-		const [toolbarHeight, setToolbarHeight] = useState(TOOLBAR_HEIGHT);
 		const [toast, setToast] = useState<string | null>(null);
 
 		const containerRef = useRef<HTMLDivElement>(null);
+		// The scene's own outer wrapper - the toolbar/panel anchor to *this*
+		// element's rect (not `containerRef`, the inner clipped scene box),
+		// matching where they used to render as normal DOM children of it
+		// before being portalled out to `document.body`.
+		const wrapperRef = useRef<HTMLDivElement>(null);
+		const [wrapperRect, setWrapperRect] = useState<AnchorRect | null>(null);
 		const layerElRefs = useRef<Record<string, HTMLDivElement | null>>({});
 		const dragRef = useRef<DragState | null>(null);
 		const autoExportTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -368,6 +374,37 @@ export const LayerScene = forwardRef<LayerSceneHandle, LayerSceneProps>(
 			observer.observe(el);
 			return () => observer.disconnect();
 		}, []);
+
+		// Tracks the outer wrapper's viewport rect so the portalled-to-body
+		// toolbar/panel (see LayerToolbar/LayerPanel's `anchorRect` prop) can
+		// still visually anchor themselves near this LayerScene instance -
+		// listens on scroll (capture, to catch any scrollable ancestor, not
+		// just the window) and resize so they keep tracking it as the page
+		// moves, not just once on mount.
+		useLayoutEffect(() => {
+			if (!showEditorChrome) return;
+			const el = wrapperRef.current;
+			if (!el) return;
+			const update = () => {
+				const rect = el.getBoundingClientRect();
+				setWrapperRect({
+					top: rect.top,
+					left: rect.left,
+					right: rect.right,
+					bottom: rect.bottom,
+				});
+			};
+			update();
+			const observer = new ResizeObserver(update);
+			observer.observe(el);
+			window.addEventListener("scroll", update, true);
+			window.addEventListener("resize", update);
+			return () => {
+				observer.disconnect();
+				window.removeEventListener("scroll", update, true);
+				window.removeEventListener("resize", update);
+			};
+		}, [showEditorChrome]);
 
 		// Live readout for the selected layer, recomputed from its actual DOM
 		// rect (not a separately-tracked value) whenever selection, breakpoint,
@@ -737,7 +774,6 @@ export const LayerScene = forwardRef<LayerSceneHandle, LayerSceneProps>(
 			[layers],
 		);
 
-		const showEditorChrome = isEdit && showChrome;
 		// Only a toolbar-forced Mobile/Tablet selection narrows the box - the
 		// auto-resolved breakpoint (from measured width) must never feed back
 		// into the width it was measured from.
@@ -748,6 +784,7 @@ export const LayerScene = forwardRef<LayerSceneHandle, LayerSceneProps>(
 
 		return (
 			<div
+				ref={wrapperRef}
 				className={className}
 				style={{
 					position: "relative",
@@ -759,8 +796,10 @@ export const LayerScene = forwardRef<LayerSceneHandle, LayerSceneProps>(
 				<style>{sceneCSS}</style>
 
 				{/* Toolbar - shared component (also used by SpotsEditProvider's
-			    backgroundLayers), absolutely positioned and draggable so its
-			    own content width can never push/resize the scene box. */}
+			    backgroundLayers), portalled to document.body and positioned
+			    `fixed` (anchored near this wrapper's own rect) so no ancestor
+			    container - however small or clipped - can ever constrain or
+			    clip it. */}
 				{showEditorChrome && (
 					<LayerToolbar
 						selected={selectedLayer}
@@ -796,7 +835,7 @@ export const LayerScene = forwardRef<LayerSceneHandle, LayerSceneProps>(
 							setForcedBreakpoint(bp === "desktop" ? null : bp)
 						}
 						defaultCorner={{ top: 0, left: 0 }}
-						onHeightChange={setToolbarHeight}
+						anchorRect={wrapperRect}
 					/>
 				)}
 
@@ -804,16 +843,21 @@ export const LayerScene = forwardRef<LayerSceneHandle, LayerSceneProps>(
 			    what an end user would see in preview. The only exception is
 			    the selected layer's own selection outline and resize/rotate
 			    handles, which are visual indicators of that layer's position,
-			    not general editor chrome. The floating toolbar/panel are
-			    siblings (absolutely positioned, see above/below), never
-			    docked in-flow next to it, so this box's size/position is
-			    fixed regardless of selection or panel state. */}
+			    not general editor chrome. The toolbar/panel/readout are now
+			    all portalled, `position: fixed` overlays anchored to this
+			    wrapper's rect (see `wrapperRect`) rather than sharing layout
+			    space with this box - so its own top/left/right/bottom must
+			    NEVER depend on edit mode. `boxSizing: border-box` keeps the
+			    rendered box (as measured by `getBoundingClientRect()`)
+			    pixel-identical whether or not the edit-mode border below is
+			    drawn - a `content-box` border would otherwise grow the box by
+			    its own width and shift measurements between modes. */}
 				<div
 					ref={containerRef}
 					style={{
 						position: "absolute",
-						top: showEditorChrome ? toolbarHeight + ROW_GAP : 0,
-						bottom: showEditorChrome ? READOUT_HEIGHT + ROW_GAP : 0,
+						top: 0,
+						bottom: 0,
 						...(devicePreviewWidth
 							? {
 									left: "50%",
@@ -822,6 +866,7 @@ export const LayerScene = forwardRef<LayerSceneHandle, LayerSceneProps>(
 									transform: "translateX(-50%)",
 								}
 							: { left: 0, right: 0 }),
+						boxSizing: "border-box",
 						// `position: absolute` still works as a containing block for
 						// this scene's own absolutely-positioned layer children below.
 						zIndex: 0,
@@ -834,10 +879,11 @@ export const LayerScene = forwardRef<LayerSceneHandle, LayerSceneProps>(
 						// its own self-contained region next to the toolbar/panel
 						// regardless of the page's own background (this would be an
 						// unwanted visual artifact in preview/production, so it's
-						// edit-mode only).
+						// edit-mode only). `border-box` above means this never changes
+						// the box's rendered position/size, only what's drawn inside it.
 						border: showEditorChrome
 							? "1px solid rgba(148,163,184,0.25)"
-							: undefined,
+							: "1px solid transparent",
 						background: showEditorChrome ? "rgba(148,163,184,0.06)" : undefined,
 						// When stacked with other LayerScene instances in the same
 						// viewport (e.g. SpotsEditProvider's page-wide background
@@ -948,6 +994,7 @@ export const LayerScene = forwardRef<LayerSceneHandle, LayerSceneProps>(
 						selectedId={selectedId}
 						onSelect={(id) => setSelectedId(id)}
 						defaultCorner={{ top: 0, right: 0 }}
+						anchorRect={wrapperRect}
 					/>
 				)}
 

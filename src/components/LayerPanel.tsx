@@ -1,6 +1,7 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import { useLucideIcon } from "../iconRegistry";
-import { useDraggable } from "./useDraggable";
+import { useDraggable, type AnchorRect } from "./useDraggable";
 import type { LayerDef } from "../types";
 
 const FONT = "system-ui,sans-serif";
@@ -33,13 +34,25 @@ export interface LayerPanelProps {
 	defaultCorner?: React.CSSProperties;
 	position?: "absolute" | "fixed";
 	zIndex?: number;
+	/**
+	 * Viewport-coordinate rect (e.g. the owning `LayerScene`'s own
+	 * `getBoundingClientRect()`) to anchor `defaultCorner`'s offsets to. Always
+	 * rendered via a portal to `document.body` and positioned `fixed` relative
+	 * to the viewport - passing this keeps it visually near an arbitrary
+	 * element on the page without the panel's DOM node living inside that
+	 * element's own ancestry, so no ancestor `overflow: hidden`/small
+	 * container can ever clip it.
+	 */
+	anchorRect?: AnchorRect | null;
 }
 
 /**
  * Shared floating, draggable layers list used identically by every
  * `LayerScene` instance AND `SpotsEditProvider`'s `backgroundLayers` canvas.
  * Never overlaps the scene box it's paired with - it's a genuine sibling
- * element, positioned independently.
+ * element, positioned independently. Always portalled to `document.body` (see
+ * `anchorRect`) so it's never clipped by wherever its owner happens to be
+ * mounted in the consumer's DOM tree.
  */
 export const LayerPanel: React.FC<LayerPanelProps> = ({
 	title,
@@ -49,10 +62,15 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
 	defaultCorner = { top: 0, right: 0 },
 	position = "absolute",
 	zIndex = 50,
+	anchorRect,
 }) => {
-	const { ref, style, dragHandleProps } = useDraggable(defaultCorner, position);
+	const { ref, style, dragHandleProps } = useDraggable(
+		defaultCorner,
+		anchorRect ? "fixed" : position,
+		anchorRect,
+	);
 
-	return (
+	return createPortal(
 		<div
 			ref={ref}
 			style={{
@@ -174,6 +192,7 @@ export const LayerPanel: React.FC<LayerPanelProps> = ({
 						</button>
 					))}
 			</div>
-		</div>
+		</div>,
+		document.body,
 	);
 };

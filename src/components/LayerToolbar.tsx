@@ -1,7 +1,7 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import { useLucideIcon } from "../iconRegistry";
-import { useDraggable } from "./useDraggable";
+import { useDraggable, type AnchorRect } from "./useDraggable";
 import {
 	PRESET_DEFAULT_INTENSITY,
 	PRESET_DURATION_SECONDS,
@@ -423,6 +423,16 @@ export interface LayerToolbarProps {
 	zIndex?: number;
 	/** Reports the toolbar's own rendered height (px) whenever it changes - e.g. when it wraps onto a second row - so a caller reserving layout space around it (see `LayerScene`) can stay in sync instead of assuming a fixed height. */
 	onHeightChange?: (height: number) => void;
+	/**
+	 * Viewport-coordinate rect (e.g. the owning `LayerScene`'s own
+	 * `getBoundingClientRect()`) to anchor `defaultCorner`'s offsets to. Always
+	 * rendered via a portal to `document.body` and positioned `fixed` relative
+	 * to the viewport - passing this keeps the toolbar visually near an
+	 * arbitrary element on the page without its DOM node living inside that
+	 * element's own ancestry, so no ancestor `overflow: hidden`/small
+	 * container can ever clip it.
+	 */
+	anchorRect?: AnchorRect | null;
 }
 
 /**
@@ -430,7 +440,9 @@ export interface LayerToolbarProps {
  * instance AND `SpotsEditProvider`'s page-wide `backgroundLayers` canvas -
  * one implementation, so they can never drift apart. Grab the ⠿ handle to
  * reposition it anywhere on screen; it never affects layout since it's
- * always absolutely/fixed positioned.
+ * always absolutely/fixed positioned. Always portalled to `document.body`
+ * (see `anchorRect`) so it's never clipped by wherever its owner happens to
+ * be mounted in the consumer's DOM tree.
  */
 export const LayerToolbar: React.FC<LayerToolbarProps> = ({
 	selected,
@@ -452,11 +464,16 @@ export const LayerToolbar: React.FC<LayerToolbarProps> = ({
 	position = "absolute",
 	zIndex = 50,
 	onHeightChange,
+	anchorRect,
 }) => {
 	const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
 	const [animationPickerOpen, setAnimationPickerOpen] = React.useState(false);
 	const [exportLabel, setExportLabel] = React.useState<string | null>(null);
-	const { ref, style, dragHandleProps } = useDraggable(defaultCorner, position);
+	const { ref, style, dragHandleProps } = useDraggable(
+		defaultCorner,
+		anchorRect ? "fixed" : position,
+		anchorRect,
+	);
 	const outerRef = React.useRef<HTMLDivElement | null>(null);
 	const colorButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const animationButtonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -485,7 +502,7 @@ export const LayerToolbar: React.FC<LayerToolbarProps> = ({
 		setAnimationPickerOpen(false);
 	}, [selected?.id]);
 
-	return (
+	return createPortal(
 		<div
 			ref={setRefs}
 			style={{
@@ -862,6 +879,7 @@ export const LayerToolbar: React.FC<LayerToolbarProps> = ({
 					</>
 				);
 			})()}
-		</div>
+		</div>,
+		document.body,
 	);
 };

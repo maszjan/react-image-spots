@@ -169,4 +169,49 @@ describe("layerResolve", () => {
 		expect(next.position).toEqual({ x: 5, y: 5 });
 		expect(next.responsive).toBeUndefined();
 	});
+
+	it("portals the toolbar and layer panel to document.body so a small, clipped embedding container can't clip them", () => {
+		const layers = [imageLayer(), iconLayer()];
+		const { getByTitle, getByText } = render(
+			<div style={{ height: 300, overflow: "hidden" }} data-testid='clip-container'>
+				<LayerScene layers={layers} mode='edit' />
+			</div>,
+		);
+
+		const clipContainer = document.querySelector(
+			"[data-testid='clip-container']",
+		) as HTMLElement;
+		const addIconButton = getByTitle("Add icon layer");
+		const layerPanelHeading = getByText("Layers (2)");
+
+		// Rendered (found via document-wide queries), but NOT inside the
+		// height-constrained/overflow:hidden ancestor - proof their DOM nodes
+		// live outside it entirely, not just visually overflowing it.
+		expect(clipContainer.contains(addIconButton)).toBe(false);
+		expect(clipContainer.contains(layerPanelHeading)).toBe(false);
+		expect(document.body.contains(addIconButton)).toBe(true);
+		expect(document.body.contains(layerPanelHeading)).toBe(true);
+	});
+
+	it("keeps the scene box's own position/size styles identical whether edit mode is on or off - toggling edit mode must never reflow it", () => {
+		const layers = [imageLayer()];
+		const { container: previewContainer } = render(
+			<LayerScene layers={layers} mode='preview' />,
+		);
+		const { container: editContainer } = render(<LayerScene layers={layers} mode='edit' />);
+
+		// The scene box is the img's great-grandparent: img -> animation
+		// wrapper div -> per-layer positioned div -> scene box div.
+		const previewImg = previewContainer.querySelector(
+			"img[src='/mascot.png']",
+		) as HTMLElement;
+		const editImg = editContainer.querySelector("img[src='/mascot.png']") as HTMLElement;
+		const previewSceneBox = previewImg.parentElement!.parentElement!
+			.parentElement as HTMLElement;
+		const editSceneBox = editImg.parentElement!.parentElement!.parentElement as HTMLElement;
+
+		for (const prop of ["top", "left", "right", "bottom", "width", "height"] as const) {
+			expect(editSceneBox.style[prop]).toBe(previewSceneBox.style[prop]);
+		}
+	});
 });
